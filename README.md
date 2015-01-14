@@ -1,0 +1,1 @@
+Weak heap implementation for Advanced Data Structures course in ITMO. Fall'14

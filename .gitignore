@@ -1,0 +1,12 @@
+.idea/
+out/
+*.iml
+
+*.aux
+*.nav
+*.out
+*.snm
+*.tex~
+*.toc
+*.log
+*.synctex.gz
