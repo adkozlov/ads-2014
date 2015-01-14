@@ -8,26 +8,22 @@ import java.util.*;
 
 public class Tester {
 
-    public static final Random RANDOM = new Random();
-
-    public static final int N_MAX = 1000;
-
-    public static final String TEST_PASSED_MESSAGE = "passed";
-    public static final String TEST_FAILED_MESSAGE = "failed";
-
-    private static void printTestMessage(String testName, boolean value) {
-        System.out.printf("%s test: %s\n", testName, value ? TEST_PASSED_MESSAGE : TEST_FAILED_MESSAGE);
-    }
-
     public static void main(String[] args) {
-        List<ComparisonsCounter<Double>> values = new ArrayList<>();
-        for (int i = 0; i < N_MAX; i++) {
-            values.add(new ComparisonsCounter<>(RANDOM.nextDouble()));
-        }
+        List<Double> values = Generator.generateListOfDoubles(Generator.LIST_LENGTHS[0]);
 
         printTestMessage("Insertion", insertionTest(values));
         printTestMessage("Building", buildingTest(values));
         printTestMessage("Extraction", extractionTest(values));
+
+        for (int length : Generator.LIST_LENGTHS) {
+            List<ComparisonsCounter<String>> strings = ComparisonsCounter.convert(Generator.generateListOfStrings(length));
+
+            performanceTest(strings);
+        }
+    }
+
+    private static void printTestMessage(String testName, boolean value) {
+        System.out.printf("%s test: %s\n", testName, value ? "passed" : "failed");
     }
 
     private static <T extends Comparable<T>> boolean insertionTest(Collection<T> values) {
@@ -109,5 +105,28 @@ public class Tester {
         }
 
         return true;
+    }
+
+    private static <T extends Comparable<T>> void performanceTest(Collection<ComparisonsCounter<T>> values) {
+        List<ComparisonsCounter<T>> list = new LinkedList<>(values);
+        Collections.sort(list);
+
+        ComparisonsCounter.refreshCounter();
+        extractAll(new BinaryHeap<>(values));
+        long binaryHeapComparisonsCount = ComparisonsCounter.getCount();
+
+        ComparisonsCounter.refreshCounter();
+        extractAll(new WeakHeap<>(values));
+        long weakHeapComparisonsCount = ComparisonsCounter.getCount();
+
+        System.out.printf("length: %d, count of comparisons for binary heap: %d, for weak heap: %d\n", values.size(),
+                binaryHeapComparisonsCount, weakHeapComparisonsCount);
+    }
+
+    private static <T extends Comparable<T>> void extractAll(IHeap<T> heap) {
+        List<T> result = new ArrayList<>();
+        while (!heap.isEmpty()) {
+            result.add(heap.extractMin());
+        }
     }
 }
