@@ -1,4 +1,4 @@
-package ru.spbau.ads.kozlov.tests;
+package ru.spbau.ads.kozlov.heaps.tests;
 
 import java.util.ArrayList;
 import java.util.List;

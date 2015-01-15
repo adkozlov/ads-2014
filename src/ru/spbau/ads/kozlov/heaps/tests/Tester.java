@@ -1,4 +1,4 @@
-package ru.spbau.ads.kozlov.tests;
+package ru.spbau.ads.kozlov.heaps.tests;
 
 import ru.spbau.ads.kozlov.heaps.BinaryHeap;
 import ru.spbau.ads.kozlov.heaps.IHeap;
