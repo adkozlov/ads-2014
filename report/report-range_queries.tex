@@ -1,0 +1,105 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{listings,comment,hyperref,listings,verbatim,amssymb}
+\usepackage[nohead,nofoot]{geometry}
+\usepackage{pgfplots}
+
+\begin{document}
+
+\title{Cтатическая задача в $\mathbb{R}^d$ c $O(\log^{d-1}(n))$}
+\author{Андрей Козлов}
+\date{Январь 2015}
+
+\maketitle
+
+\section*{Постановка задачи}
+
+Требуется реализовать дерево запросов принадлежности множества точек данному прямоугольнику.
+
+Также требуется сравнить время работы запроса на дереве со временем работы наивного алгоритма.
+
+\section*{Реализация}
+
+Реализованы классы \texttt{AbstractRangeTree}, \texttt{RangeTree2D} и \texttt{RangeTreeKD}, параметризуемые типом координаты точки.
+
+Для координат реализован интерфейс \texttt{ICoordinate}. Тип координаты должен обладать следующими свойствами:
+\begin{itemize}
+	\item существование отношения порядка;
+	\item существование следующего элемента.
+\end{itemize}
+\lstinputlisting[language=Java,firstline=6,frame=single,basicstyle=\footnotesize,breaklines=true]{../src/ru/spbau/ads/kozlov/rangeQuries/coordinates/ICoordinate.java}
+В работе приведена реализация целых координат \texttt{IntegerCoordinate}. На основе абстрактного класса \texttt{AbstractCoordinate} можно реализовать вещественные координаты.
+
+\section*{Проверка корректности}
+
+Тесты на проверку корректоности проводились следующий образом:
+\begin{enumerate}
+	\item генерируется прямоугольник \texttt{rectangle};
+	\item генерируется набор точек \texttt{pointsInside} внутри прямоугольника \texttt{rectangle};
+	\item генерирутеся набор точек \texttt{pointsOutside} снаружи прямоугольника \texttt{rectangle}.
+	\item наборы \texttt{pointsInside} и \texttt{pointsOutside} смешиваются и по ним строится дерево \texttt{tree};
+	\item на дереве \texttt{tree} выполняется запрос на прямоугольник \texttt{rectangle}, ответ сравнивается с набором точек \texttt{pointsInside}.
+\end{enumerate}
+
+Данные тесты проводились при различных значениях числа точек снаружи и внутри прямоугоьника.
+
+\section*{Сравнение производительности}
+
+В таблице \ref{table:durations} приведены результаты тестирования асимптотик операций запроса. Среднее значение бралось по результатам десяти запусков.
+
+\begin{table}[h]
+	\begin{tabular}{c | c | c}
+		number of points & range query & naive algorithm \\
+		\hline
+		10000 & 1 & 5 \\
+		20000 & 0 & 0 \\
+		30000 & 1 & 1 \\
+		40000 & 0 & 2 \\
+		50000 & 0 & 3 \\
+		100000 & 2 & 9 \\
+		200000 & 5 & 20 \\
+		300000 & 8 & 32 \\
+		400000 & 10 & 42 \\
+	\end{tabular}
+
+	\caption{Среднее время выполнения запроса (мс)}
+	\label{table:durations}
+\end{table}
+
+\begin{figure}[h]
+	\begin{tikzpicture}
+		\begin{axis}[xlabel=number of points,ylabel=average query duration (ms)]
+			\addplot[color=red,mark=x] coordinates {
+				(10000, 1)
+				(20000, 0)
+				(30000, 1)
+				(40000, 0)
+				(50000, 0)
+				(100000, 2)
+				(200000, 5)
+				(300000, 8)
+				(400000, 10)
+			};
+			\addplot[color=blue,mark=*] coordinates {
+				(10000, 5)
+				(20000, 0)
+				(30000, 1)
+				(40000, 2)
+				(50000, 3)
+				(100000,9)
+				(200000, 20)
+				(300000, 32)
+				(400000, 42)
+			};
+			\legend{range query,naive algorithm}
+		\end{axis}
+	\end{tikzpicture}
+
+	\caption{График зависимости времени выполнения запроса от количества точек $n$}
+	\label{pic:durations}
+\end{figure}
+
+\end{document}
