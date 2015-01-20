@@ -1,4 +1,4 @@
-package ru.spbau.ads.kozlov.rangeQuries;
+package ru.spbau.ads.kozlov.rangeQueries;
 
 /**
  * @author adkozlov
@@ -6,4 +6,5 @@ package ru.spbau.ads.kozlov.rangeQuries;
 public interface IHasDimension {
 
     int getDimension();
+
 }
