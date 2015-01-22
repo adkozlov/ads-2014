@@ -30,7 +30,7 @@ public class Generator {
         return new Point(coordinates);
     }
 
-    public static Point nextIntPoint(int origin, int bound, Rectangle rectangle) {
+    public static Point nextIntPointOutside(int origin, int bound, Rectangle rectangle) {
         int dimension = rectangle.getDimension();
         Point result = nextIntPoint(dimension, origin, bound);
 
